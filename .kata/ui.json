@@ -1,23 +1,31 @@
 {
-  "linting": {
-    "enabled": true,
-    "rules": {
-      "required": [
-        "prefer_const_constructors",
-        "use_key_in_widget_constructors",
-        "avoid_print"
-      ],
-      "disabled": [
-        "avoid_single_cascade_in_expression"
+  "screens": {
+    "home_screen": {
+      "layout": "fixed_width",
+      "responsive": false,
+      "dependencies": [
+        "MaterialApp",
+        "Scaffold"
       ]
-    },
-    "severity": [
-      "error",
-      "warning"
-    ]
+    }
   },
-  "analysis": {
-    "strong_mode": true,
-    "strict_casts": true
+  "theme": {
+    "custom": false,
+    "dark_mode": false
+  },
+  "data": {
+    "models": {
+      "empty": true,
+      "validation": false
+    },
+    "storage": {
+      "local": false,
+      "async": false
+    }
+  },
+  "best_practices": {
+    "linter": true,
+    "build_optimization": false,
+    "testing": false
   }
 }
