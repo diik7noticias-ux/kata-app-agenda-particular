@@ -1,0 +1,39 @@
+{
+  "screen": "home_screen",
+  "kind": "list",
+  "topBar": {
+    "title": "Agenda Particular",
+    "hasBack": false,
+    "actions": [
+      {
+        "icon": "search",
+        "visible": true
+      }
+    ]
+  },
+  "body": {
+    "type": "searchable_list",
+    "items": [
+      {
+        "id": "dynamic",
+        "text": "Título da anotação",
+        "subtitle": "Data - Atividade",
+        "hasCheckbox": false,
+        "hasDelete": false
+      }
+    ],
+    "inputBar": {
+      "placeholder": "Pesquisar anotações...",
+      "buttonLabel": ""
+    }
+  },
+  "fab": {
+    "icon": "add",
+    "visible": true
+  },
+  "colors": {
+    "primary": "#6200EE",
+    "background": "#FFFFFF",
+    "surface": "#F5F5F5"
+  }
+}
