@@ -1,57 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:org_kata_agendaparticular/screens/note_detail_screen.dart';
 
-@HiveType(typeId: 0)
-@HiveField(0)
-class Note {
-  @HiveField(1)
-  final String title;
-
-  @HiveField(2)
-  final DateTime date;
-
-  @HiveField(3)
-  final String activity;
-
-  Note(this.title, this.date, this.activity);
-}
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-  
+
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<Note> _notes = [];
+  List<Note> _notes = [];
   List<Note> _filteredNotes = [];
-  final Box<Note> _noteBox = Hive.box<Note>('notes');
 
   @override
   void initState() {
     super.initState();
-    _loadNotes();
+    _searchController.addListener(_filterNotes);
   }
 
-  void _loadNotes() {
-    setState(() {
-      _notes.clear();
-      _filteredNotes.clear();
-      _notes.addAll(_noteBox.values);
-      _filteredNotes.addAll(_notes);
-    });
-  }
-
-  void _addNote() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const NoteDetailScreen(addMode: true),
-        fullscreenDialog: true,
-      ),
-    ).then((_) => _loadNotes());
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _filterNotes() {
@@ -65,6 +36,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _addNote() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NoteDetailScreen(addMode: true),
+        fullscreenDialog: true,
+      ),
+    ).then((_) => setState(() {}));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,8 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: _filterNotes,
-          )
+            onPressed: () => showSearch(
+              context: context,
+              delegate: _NoteSearchDelegate(_notes),
+            ),
+          ),
         ],
       ),
       body: Column(
@@ -88,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
-              onChanged: (_) => _filterNotes(),
             ),
           ),
           Expanded(
@@ -105,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(
                         builder: (context) => NoteDetailScreen(note: note),
                       ),
-                    ).then((_) => _loadNotes());
+                    ).then((_) => setState(() {}));
                   },
                 );
               },
@@ -118,6 +101,81 @@ class _HomeScreenState extends State<HomeScreen> {
         tooltip: 'Adicionar anotação',
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+class _NoteSearchDelegate extends SearchDelegate<Note> {
+  final List<Note> _notes;
+
+  _NoteSearchDelegate(this._notes);
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: const Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, null);
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    final filteredNotes = _notes.where((note) {
+      return note.title.toLowerCase().contains(query.toLowerCase()) ||
+             note.activity.toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    return ListView.builder(
+      itemCount: filteredNotes.length,
+      itemBuilder: (context, index) {
+        final note = filteredNotes[index];
+        return ListTile(
+          title: Text(note.title),
+          subtitle: Text('${note.date.day}/${note.date.month}/${note.date.year} - ${note.activity}'),
+          onTap: () {
+            close(context, note);
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final suggestions = _notes.where((note) {
+      final titleLower = note.title.toLowerCase();
+      final activityLower = note.activity.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower) || activityLower.contains(searchLower);
+    }).toList();
+
+    return ListView.builder(
+      itemCount: suggestions.length,
+      itemBuilder: (context, index) {
+        final note = suggestions[index];
+        return ListTile(
+          title: Text(note.title),
+          subtitle: Text('${note.date.day}/${note.date.month}/${note.date.year} - ${note.activity}'),
+          onTap: () {
+            query = note.title;
+            showResults(context);
+          },
+        );
+      },
     );
   }
 }
