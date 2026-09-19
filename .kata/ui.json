@@ -1,31 +1,27 @@
 {
-  "screens": {
-    "home_screen": {
-      "layout": "fixed_width",
-      "responsive": false,
-      "dependencies": [
-        "MaterialApp",
-        "Scaffold"
-      ]
-    }
+  "screen": "home_screen",
+  "kind": "list",
+  "topBar": {
+    "title": "Agenda Particular",
+    "actions": [
+      {
+        "type": "icon_button",
+        "icon": "search",
+        "on_pressed": "search"
+      }
+    ]
   },
-  "theme": {
-    "custom": false,
-    "dark_mode": false
+  "body": {
+    "type": "empty",
+    "message": "App gerada pelo KATA."
   },
-  "data": {
-    "models": {
-      "empty": true,
-      "validation": false
-    },
-    "storage": {
-      "local": false,
-      "async": false
-    }
+  "fab": {
+    "icon": "+",
+    "visible": false
   },
-  "best_practices": {
-    "linter": true,
-    "build_optimization": false,
-    "testing": false
+  "colors": {
+    "primary": "#6200EE",
+    "background": "#FFFFFF",
+    "surface": "#F5F5F5"
   }
 }
