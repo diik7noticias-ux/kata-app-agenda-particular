@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:org_kata_agendaparticular/screens/note_detail_screen.dart';
+import 'package:org_kata_agendaparticular/models/note.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
