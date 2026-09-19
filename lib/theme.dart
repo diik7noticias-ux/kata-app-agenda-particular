@@ -26,7 +26,7 @@ ThemeData buildKataTheme() {
       backgroundColor: kPrimaryColor,
       foregroundColor: Colors.white,
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: kSurfaceColor,
       elevation: 2,
     ),
